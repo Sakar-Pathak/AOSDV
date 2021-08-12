@@ -18,7 +18,8 @@ class Dbms():
             self.connection = mysql.connector.connect(host = host,
                                                       user = user,
                                                       password = password,
-                                                      database = database)
+                                                      database = database,
+                                                      auth_plugin='mysql_native_password')
             self.cursor = self.connection.cursor
 
         except mysql.connector.Error as error:
@@ -43,7 +44,6 @@ class Dbms():
         cursor = self.connection.cursor()
         cursor.execute("SELECT Time, Yaw, Pitch, Roll FROM ypr")
         data = cursor.fetchall()
-        print(data)
         return data
 
 

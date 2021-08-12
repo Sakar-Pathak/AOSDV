@@ -1,7 +1,7 @@
 {"Host": "2400:1a00:b011:4a1:a62:66ff:fe71:db85",
 "Port": 50007,
-"User": "shreejansilwal",
-"Password": "",
+"User": "user",
+"Password": "User!1@2#3",
 "Database": "aosdv",
 "Portname": "COM4",
 "Baudrate": "9600"
