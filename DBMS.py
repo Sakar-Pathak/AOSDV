@@ -38,7 +38,6 @@ class Dbms():
         cursor.executemany(mySql_insert_query, data)
         self.connection.commit()
 
-        print("successfully saved to database")
 
     def read_from_database(self):
         cursor = self.connection.cursor()

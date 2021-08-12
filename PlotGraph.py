@@ -134,7 +134,7 @@ class makeGraph:
                     break
 
             f.close()
-            print("DONE!!!!")
+            print("FILE IS SUCCESSFULLY SAVED LOCALLY !!!!")
 
     def save_to_database(self, event):
         if self.supervisor == 'stop' and self.aosdv_type["streamer_DB"]:
@@ -147,9 +147,10 @@ class makeGraph:
                                               self.shared_data_roll[0:self.length_x_vals]):
                 data.append((time, yaw, pitch, roll))
             DBMS.dbms.save_to_database(data)
+            print("SUCCESSFULLY SAVED TO DATABASE")
 
         else:
-            print("you have no access to database!!!!!!!!!")
+            print("YOU HAVE NO ACCESS TO SAVE TO DATABASE!!!!!!!!!")
 
 
 def PlotGraph_process(aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll):

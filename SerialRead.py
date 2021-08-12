@@ -16,6 +16,8 @@ def getport_baud():
 
     return port_baud
 
+
+
 def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll):
     data_time = 0
     length_data = 52
@@ -28,6 +30,7 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
                 quit()
 
 
+
         while True:
 
             while shared_data_supervisor[0] == 'stop':
@@ -36,7 +39,6 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
             count = 1
 
             while shared_data_supervisor[0] == 'clear':
-                print("clear")
                 if count == 1:
                     shared_data_time[:] = []
                     shared_data_head[:] = []
@@ -47,10 +49,10 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
 
                 time.sleep(1)
 
+
             while shared_data_supervisor[0] == 'start':
 
                 if aosdv_type["reader"]:
-                    print("reader ho timi")
                     data = Client.receive_data(length_data)
                     if data == -1:  # it means server is not available
                         quit()
@@ -85,8 +87,7 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
 
 
     if aosdv_type["recorded"]:
-        print("recorded")
-
+        
         DBMS.dbms.initialize()
 
         datum = DBMS.dbms.read_from_database()
