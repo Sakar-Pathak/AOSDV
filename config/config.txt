@@ -1,0 +1,8 @@
+{"Host": "localhost",
+"Port": 50007,
+"User": "root",
+"Password": "",
+"Database": "aosdv",
+"Portname": "COM4",
+"Baudrate": "9600"
+}
