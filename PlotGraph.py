@@ -111,7 +111,7 @@ class makeGraph:
 
         # storing the lines into a self variable list
         self.lines = [lyaw, lpitch, lroll, lquatW, lquatX, lquatY, lquatZ, ltemp1, ltemp2, lemf1, lemf2]
-        if self.length_x_vals > 0:
+        if self.length_x_vals > 3:
             self.set_x_limits()
 
     def get_slider_x_value(self, val):
@@ -314,10 +314,10 @@ def PlotGraph_process(aosdv_type, shared_data_supervisor, shared_data_time, shar
     savebutton.label.set_fontsize(7)
 
     # save to database button
-    save = plt.axes([0.01, 0.0, 0.05, 0.03])
-    savebutton = Button(save, 'SAVE TO DB', color='#e28743', hovercolor='gray')
-    savebutton.on_clicked(makegraph.save_to_database)
-    savebutton.label.set_fontsize(7)
+    save_database = plt.axes([0.01, 0.0, 0.05, 0.03])
+    save_databasebutton = Button(save_database, 'SAVE TO DB', color='#e28743', hovercolor='gray')
+    save_databasebutton.on_clicked(makegraph.save_to_database)
+    save_databasebutton.label.set_fontsize(7)
 
     # slider for regulating x_lim i.e regulating x axis
     sliderX_location = plt.axes([0.2, 0.01, 0.4, 0.02], facecolor='lightgoldenrodyellow')

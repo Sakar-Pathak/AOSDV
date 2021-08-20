@@ -138,28 +138,36 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
 
         data = DBMS.dbms.read_from_database()
 
-        DateOfCreation = data[0][0][0]
-        Description = data[0][0][1]
+        if data == [[], []]:
+            print("Given CreatedBy and DataName has no data associated with it!!")
+            return
+        try:
+            DateOfCreation = data[0][0][0]
+            Description = data[0][0][1]
 
-        print("ABOUT DATA!!!!!")
-        print("Date Of Creation:", DateOfCreation)
-        print("Description:", Description)
+            print("ABOUT DATA!!!!!")
+            print("Date Of Creation:", DateOfCreation)
+            print("Description:", Description)
 
 
-        for datum in data[1]:
-            shared_data_time.append(datum[0])
+            for datum in data[1]:
+                shared_data_time.append(datum[0])
 
-            shared_data_yaw.append(datum[1])
-            shared_data_pitch.append(datum[2])
-            shared_data_roll.append(datum[3])
+                shared_data_yaw.append(datum[1])
+                shared_data_pitch.append(datum[2])
+                shared_data_roll.append(datum[3])
 
-            shared_data_quatW.append(datum[4])
-            shared_data_quatX.append(datum[5])
-            shared_data_quatY.append(datum[6])
-            shared_data_quatZ.append(datum[7])
+                shared_data_quatW.append(datum[4])
+                shared_data_quatX.append(datum[5])
+                shared_data_quatY.append(datum[6])
+                shared_data_quatZ.append(datum[7])
 
-            shared_data_temp1.append(datum[8])
-            shared_data_temp2.append(datum[9])
+                shared_data_temp1.append(datum[8])
+                shared_data_temp2.append(datum[9])
 
-            shared_data_emf1.append(datum[10])
-            shared_data_emf2.append(datum[11])
+                shared_data_emf1.append(datum[10])
+                shared_data_emf2.append(datum[11])
+
+        except:
+            print("Error reading data   !!printing data!!")
+            print(data)

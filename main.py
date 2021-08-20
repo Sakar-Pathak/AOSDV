@@ -14,6 +14,8 @@ import SerialRead
 
 import PlotGraph
 
+import time
+
 
 class Game(ShowBase):
     def __init__(self):
@@ -44,12 +46,14 @@ class Game(ShowBase):
 
     def update(self, task):
 
-        length_shared_data_time = len(shared_data_roll)
+        length_shared_data_time = len(shared_data_roll) - 1
 
         try:
             self.Head = shared_data_yaw[length_shared_data_time]
             self.Pitch = shared_data_pitch[length_shared_data_time]
             self.Roll = shared_data_roll[length_shared_data_time]
+
+
 
         except (IndexError, ValueError):
             return task.cont
