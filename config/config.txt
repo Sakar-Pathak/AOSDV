@@ -1,8 +1,11 @@
-{"Host": "2400:1a00:b011:4a1:a62:66ff:fe71:db85",
+{"Host": "localhost",
 "Port": 50007,
-"User": "user",
-"Password": "User!1@2#3",
+"User": "root",
+"Password": "",
 "Database": "aosdv",
 "Portname": "COM4",
-"Baudrate": "9600"
+"Baudrate": "9600",
+
+"DataName" : "firstdata",
+"Description" : "This is the first data uploaded into the database"
 }

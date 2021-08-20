@@ -68,6 +68,7 @@ def SON():
 # function to send data to the server
 def send_data(data):
     data = pickle.dumps(data)
+    #print("length of pickled data = ", len(data))
     try:
         client.send(data)
         return True

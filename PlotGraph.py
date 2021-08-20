@@ -9,13 +9,15 @@ from matplotlib.widgets import Slider
 
 from tkinter import filedialog
 
-
 import DBMS
+
+import ast
 
 style.use('seaborn-whitegrid')
 
 fig = plt.figure()
 ax = plt.axes()
+
 
 ax.grid(which='major', linewidth='0.5', color='black', alpha=1)  # Customize the major grid
 ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black', alpha=1)  # Customize the minor grid
@@ -23,18 +25,33 @@ ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black', alpha=1)  
 
 class makeGraph:
 
-    def __init__(self, aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll):
+    def __init__(self, aosdv_type, shared_data_supervisor, shared_data_time, shared_data_yaw, shared_data_pitch,
+                 shared_data_roll, shared_data_quatW, shared_data_quatX, shared_data_quatY, shared_data_quatZ,
+                 shared_data_temp1, shared_data_temp2, shared_data_emf1, shared_data_emf2):
 
         self.aosdv_type = aosdv_type
 
         self.shared_data_supervisor = shared_data_supervisor
 
         self.shared_data_time = shared_data_time
-        self.shared_data_head = shared_data_head
+
+        self.shared_data_yaw = shared_data_yaw
         self.shared_data_pitch = shared_data_pitch
         self.shared_data_roll = shared_data_roll
 
-        self.lines_visibility = [True, True, True]  # it is a self variable for regulating visibility of lines. initializing all the lines to visible
+        self.shared_data_quatW = shared_data_quatW
+        self.shared_data_quatX = shared_data_quatX
+        self.shared_data_quatY = shared_data_quatY
+        self.shared_data_quatZ = shared_data_quatZ
+
+        self.shared_data_temp1 = shared_data_temp1
+        self.shared_data_temp2 = shared_data_temp2
+
+        self.shared_data_emf1 = shared_data_emf1
+        self.shared_data_emf2 = shared_data_emf2
+
+        self.lines_visibility = [True, True, True, True, True, True, True, True, True, True,
+                                 True]  # it is a self variable for regulating visibility of lines. initializing all the lines to visible
 
         self.supervisor = 'stop'  # it is a self variable for regulating start, stop and clearing of the lines
 
@@ -42,6 +59,9 @@ class makeGraph:
 
         # initializing the slider_x_value
         self.slider_x_value = 0
+
+        self.ani = animation.FuncAnimation(fig, self.animate,
+                                      interval=1000)  # it calls the animate function under the object makegraph after each 1ms interval
 
     def animate(self, i):
         self.shared_data_supervisor[0] = self.supervisor
@@ -55,22 +75,42 @@ class makeGraph:
             ax.clear()
             return  # if the clear button is pressed then the animate function return by clearing the datas
 
-        self.length_x_vals = len(self.shared_data_time)  # storing the length of self variable x_vals to another self variable length_x_vals for further use
+        self.length_x_vals = len(
+            self.shared_data_emf2)  # storing the length of self variable data_emf2 to another self variable length_x_vals for further use
 
         ax.clear()  # clearing the axes before updating
 
         ax.minorticks_on() if self.gridregulator else ax.minorticks_off()  # turning on and off the minorticks(minorgrids) according to the value of self.gridregulator after the axes is cleared
 
         # plotting the lines into the axes and giving each line a name
-        lhead, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_head[0:self.length_x_vals],
-                         '-bo', lw=1, label='Head', visible=self.lines_visibility[0])
+        lyaw, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_yaw[0:self.length_x_vals],
+                        '-bo', lw=1, label='Yaw', visible=self.lines_visibility[0])
         lpitch, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_pitch[0:self.length_x_vals],
                           '-go', lw=1, label='Pitch', visible=self.lines_visibility[1])
         lroll, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_roll[0:self.length_x_vals],
                          '-ro', lw=1, label='Roll', visible=self.lines_visibility[2])
 
+        lquatW, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_quatW[0:self.length_x_vals],
+                          '-co', lw=1, label='QuatW', visible=self.lines_visibility[3])
+        lquatX, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_quatX[0:self.length_x_vals],
+                          '-mo', lw=1, label='QuatX', visible=self.lines_visibility[4])
+        lquatY, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_quatY[0:self.length_x_vals],
+                          '-yo', lw=1, label='QuatY', visible=self.lines_visibility[5])
+        lquatZ, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_quatZ[0:self.length_x_vals],
+                          '-ko', lw=1, label='QuatZ', visible=self.lines_visibility[6])
+
+        ltemp1, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_temp1[0:self.length_x_vals],
+                          '-bo', lw=1, label='Temp1', visible=self.lines_visibility[7])
+        ltemp2, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_temp2[0:self.length_x_vals],
+                          '-go', lw=1, label='Temp2', visible=self.lines_visibility[8])
+
+        lemf1, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_emf1[0:self.length_x_vals],
+                         '-ro', lw=1, label='Emf1', visible=self.lines_visibility[9])
+        lemf2, = ax.plot(self.shared_data_time[0:self.length_x_vals], self.shared_data_emf2[0:self.length_x_vals],
+                         '-co', lw=1, label='Emf2', visible=self.lines_visibility[10])
+
         # storing the lines into a self variable list
-        self.lines = [lhead, lpitch, lroll]
+        self.lines = [lyaw, lpitch, lroll, lquatW, lquatX, lquatY, lquatZ, ltemp1, ltemp2, lemf1, lemf2]
         if self.length_x_vals > 0:
             self.set_x_limits()
 
@@ -86,7 +126,7 @@ class makeGraph:
         ax.set_xlim(x_left_limit, x_right_limit)
 
     def set_lines_visible(self, label):  # it takes label of the button clicked as argument
-        index = ['Head', 'Pitch', 'Roll'].index(
+        index = ['Yaw', 'Pitch', 'Roll', 'QuatW', 'QuatX', 'QuatY', 'QuatZ', 'Temp1', 'Temp2', 'Emf1', 'Emf2'].index(
             label)  # getting corresponging number of label i.e 0, 1 and 2 for Head, Pitch and Roll
         self.lines_visibility[index] = not self.lines_visibility[
             index]  # if button is clicked then corresponding lines visibility is toggled. It is required while axes is being cleared and updated
@@ -114,56 +154,131 @@ class makeGraph:
 
             f.write('Time')
             f.write(',')
-            f.write('Head')
+            f.write('Yaw')
             f.write(',')
             f.write('Pitch')
             f.write(',')
-            f.write('Roll' + '\n')
+            f.write('Roll')
+            f.write(',')
+            f.write('QuatW')
+            f.write(',')
+            f.write('QuatX')
+            f.write(',')
+            f.write('QuatY')
+            f.write(',')
+            f.write('QuatZ')
+            f.write(',')
+            f.write('Temp1')
+            f.write(',')
+            f.write('Temp2')
+            f.write(',')
+            f.write('Emf1')
+            f.write(',')
+            f.write('Emf2' + '\n')
 
             for count in self.shared_data_time[0:self.length_x_vals]:
                 try:
                     f.write(str(self.shared_data_time[count]))
                     f.write(',')
-                    f.write(str(self.shared_data_head[count]))
+                    f.write(str(self.shared_data_yaw[count]))
                     f.write(',')
                     f.write(str(self.shared_data_pitch[count]))
                     f.write(',')
-                    f.write(str(self.shared_data_roll[count]) + '\n')
+                    f.write(str(self.shared_data_roll[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_quatW[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_quatX[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_quatY[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_quatZ[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_temp1[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_temp2[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_emf1[count]))
+                    f.write(',')
+                    f.write(str(self.shared_data_emf2[count]) + '\n')
+
                 except(IndexError, ValueError):
                     print("error saving file")
                     break
+                    f.close()
+                    return
 
             f.close()
             print("FILE IS SUCCESSFULLY SAVED LOCALLY !!!!")
 
+
     def save_to_database(self, event):
+        self.ani.event_source.stop()
         if self.supervisor == 'stop' and self.aosdv_type["streamer_DB"]:
             DBMS.dbms.initialize()
-            data = []
+            streamer = []
+            ypr = []
+            quaternion = []
+            temperature = []
+            solar_voltage = []
 
-            for time, yaw, pitch, roll in zip(self.shared_data_time[0:self.length_x_vals],
-                                              self.shared_data_head[0:self.length_x_vals],
-                                              self.shared_data_pitch[0:self.length_x_vals],
-                                              self.shared_data_roll[0:self.length_x_vals]):
-                data.append((time, yaw, pitch, roll))
-            DBMS.dbms.save_to_database(data)
-            print("SUCCESSFULLY SAVED TO DATABASE")
+            file = open("config/config.txt", "r")
+            contents = file.read()
+            dictionary = ast.literal_eval(contents)
+            CreatedBy = dictionary["User"]
+            DataName = dictionary["DataName"]
+            Description = dictionary["Description"]
+            file.close()
+
+            streamer.append((CreatedBy, DataName, Description))
+
+            for Time, Yaw, Pitch, Roll, QuatW, QuatX, QuatY, QuatZ, Temp1, Temp2, Emf1, Emf2 in zip(
+                    self.shared_data_time[0:self.length_x_vals],
+                    self.shared_data_yaw[0:self.length_x_vals],
+                    self.shared_data_pitch[0:self.length_x_vals],
+                    self.shared_data_roll[0:self.length_x_vals],
+                    self.shared_data_quatW[0:self.length_x_vals],
+                    self.shared_data_quatX[0:self.length_x_vals],
+                    self.shared_data_quatY[0:self.length_x_vals],
+                    self.shared_data_quatZ[0:self.length_x_vals],
+                    self.shared_data_temp1[0:self.length_x_vals],
+                    self.shared_data_temp2[0:self.length_x_vals],
+                    self.shared_data_emf1[0:self.length_x_vals],
+                    self.shared_data_emf2[0:self.length_x_vals]):
+                ypr.append((CreatedBy, DataName, Time, Yaw, Pitch, Roll))
+                quaternion.append((CreatedBy, DataName, Time, QuatW, QuatX, QuatY, QuatZ))
+                temperature.append((CreatedBy, DataName, Time, Temp1, Temp2))
+                solar_voltage.append((CreatedBy, DataName, Time, Emf1, Emf2))
+            data = [streamer, ypr, quaternion, temperature, solar_voltage]
+
+
+            if DBMS.dbms.save_to_database(data):   print("Successfully Saved To Database!!!")
+            else: print("Error Saving To Database!!!")
 
         else:
             print("YOU HAVE NO ACCESS TO SAVE TO DATABASE!!!!!!!!!")
 
+        self.ani.event_source.start()
 
-def PlotGraph_process(aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll):
-    makegraph = makeGraph(aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch,
-                          shared_data_roll)
 
-    ani = animation.FuncAnimation(fig, makegraph.animate,
-                                  interval=100)  # it calls the animate function under the object makegraph after each 1ms interval
+
+def PlotGraph_process(aosdv_type, shared_data_supervisor, shared_data_time, shared_data_yaw, shared_data_pitch,
+                      shared_data_roll, shared_data_quatW, shared_data_quatX, shared_data_quatY, shared_data_quatZ,
+                      shared_data_temp1,
+                      shared_data_temp2, shared_data_emf1, shared_data_emf2, ):
+
+    makegraph = makeGraph(aosdv_type, shared_data_supervisor, shared_data_time, shared_data_yaw, shared_data_pitch,
+                          shared_data_roll, shared_data_quatW, shared_data_quatX, shared_data_quatY, shared_data_quatZ,
+                          shared_data_temp1,
+                          shared_data_temp2, shared_data_emf1, shared_data_emf2)
+
 
     # checkbuttons for toggling visibility head, pitch and roll lines
-    lines_labels = ['Head', 'Pitch', 'Roll']  # label corresponding to each lines
-    lines_activated = [True, True, True]  # initially all the lines visibility is true
-    lines_checkButton = plt.axes([0.96, 0.90, 0.04, 0.07])  # position of the checkbuttons
+    lines_labels = ['Yaw', 'Pitch', 'Roll', 'QuatW', 'QuatX', 'QuatY', 'QuatZ', 'Temp1', 'Temp2', 'Emf1',
+                    'Emf2']  # label corresponding to each lines
+    lines_activated = [True, True, True, True, True, True, True, True, True, True,
+                       True]  # initially all the lines visibility is true
+    lines_checkButton = plt.axes([0.95, 0.72, 0.06, 0.26])  # position of the checkbuttons
     lineschxbox = CheckButtons(lines_checkButton, lines_labels, lines_activated)
     lineschxbox.on_clicked(makegraph.set_lines_visible)
 

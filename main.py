@@ -44,10 +44,10 @@ class Game(ShowBase):
 
     def update(self, task):
 
-        length_shared_data_time = len(shared_data_time) - 1
+        length_shared_data_time = len(shared_data_roll)
 
         try:
-            self.Head = shared_data_head[length_shared_data_time]
+            self.Head = shared_data_yaw[length_shared_data_time]
             self.Pitch = shared_data_pitch[length_shared_data_time]
             self.Roll = shared_data_roll[length_shared_data_time]
 
@@ -153,15 +153,31 @@ if __name__ == '__main__':
 
 
     shared_data_time = manager.list()
-    shared_data_head = manager.list()
+    shared_data_yaw = manager.list()
     shared_data_pitch = manager.list()
     shared_data_roll = manager.list()
 
+    shared_data_quatW = manager.list()
+    shared_data_quatX = manager.list()
+    shared_data_quatY = manager.list()
+    shared_data_quatZ = manager.list()
+
+
+    shared_data_temp1 = manager.list()
+    shared_data_temp2 = manager.list()
+
+    shared_data_emf1 = manager.list()
+    shared_data_emf2 = manager.list()
+
     SerialRead_process1 = multiprocessing.Process(target=SerialRead.data_management, args=(
-        port_baud, aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll,))
+        port_baud, aosdv_type, shared_data_supervisor, shared_data_time, shared_data_yaw, shared_data_pitch,
+        shared_data_roll, shared_data_quatW, shared_data_quatX, shared_data_quatY, shared_data_quatZ, shared_data_temp1,
+        shared_data_temp2, shared_data_emf1, shared_data_emf2,))
 
     PlotGraph_process2 = multiprocessing.Process(target=PlotGraph.PlotGraph_process, args=(
-        aosdv_type, shared_data_supervisor, shared_data_time, shared_data_head, shared_data_pitch, shared_data_roll,))
+        aosdv_type, shared_data_supervisor, shared_data_time, shared_data_yaw, shared_data_pitch,
+        shared_data_roll, shared_data_quatW, shared_data_quatX, shared_data_quatY, shared_data_quatZ, shared_data_temp1,
+        shared_data_temp2, shared_data_emf1, shared_data_emf2,))
 
 
     CLI()

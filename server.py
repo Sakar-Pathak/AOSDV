@@ -72,7 +72,7 @@ def SON(conn):
 
 
 data = None                         # this data variable stores the data read from the streamer client to send it to the reader clients
-length_data = 52                    # length of data sent by the streamer client
+length_data = 117                    # length of data sent by the streamer client
 new_data = False                    # True if new_data is available else false
 is_streamer_available = False       # True when the streamer is connected with the server else false
 
@@ -120,7 +120,7 @@ def client_reader(conn):
                 print("connection with reader closed")
                 break
 
-        time.sleep(0.1)
+        time.sleep(0.5)
 
 
 
