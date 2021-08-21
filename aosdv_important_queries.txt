@@ -1,0 +1,151 @@
+------------------------------------------- 	CREATE TABLE 	-----------------------------------------------------
+
+CREATE TABLE streamer(
+	DateOfCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	Description varchar(250),
+	CreatedBy varchar(50),
+	DataName varchar(50),
+	PRIMARY KEY (CreatedBy, DataName));
+
+
+CREATE TABLE quaternion(
+	Time float,
+	CreatedBy varchar(50),
+	DataName varchar(50),
+	QuatW float,
+	QuatX float,
+	QuatY float,
+	QuatZ float,
+	PRIMARY KEY (Time, CreatedBy, DataName),
+	FOREIGN KEY (CreatedBy, DataName) REFERENCES streamer (CreatedBy, DataName));
+
+
+CREATE TABLE ypr(
+	Time float,
+	CreatedBy varchar(50),
+	DataName varchar(50),
+	Yaw float,
+	Pitch float,
+	Roll float,
+	PRIMARY KEY (Time, CreatedBy, DataName),
+	FOREIGN KEY (CreatedBy, DataName) REFERENCES streamer (CreatedBy, DataName));
+
+CREATE TABLE solar_voltage(
+	Time float,
+	CreatedBy varchar(50),
+	DataName varchar(50),
+	Emf1 float,
+	Emf2 float,
+	PRIMARY KEY (Time, CreatedBy, DataName),
+	FOREIGN KEY (CreatedBy, DataName) REFERENCES streamer (CreatedBy, DataName));
+
+
+CREATE TABLE temperature(
+	Time float,
+	CreatedBy varchar(50),
+	DataName varchar(50),
+	Temp1 float,
+	Temp2 float,
+	PRIMARY KEY (Time, CreatedBy, DataName),
+	FOREIGN KEY (CreatedBy, DataName) REFERENCES streamer (CreatedBy, DataName));
+
+
+
+--------------------------------------------------	NATURAL INNER JOIN 	------------------------------------------------
+
+SELECT * 
+FROM ypr
+NATURAL INNER JOIN quaternion 
+NATURAL INNER JOIN temperature
+NATURAL INNER JOIN solar_voltage; 
+
+
+
+
+
+-------------------------------------------------- 	READ EVERYTHING FROM AOSDV 	-----------------------------------
+
+SELECT x.Time, x.Yaw, x.Pitch, x.Roll, x.QuatW, x.QuatX, x.QuatY, x.QuatZ, x.Temp1, x.Temp2, x.Emf1, x.Emf2
+FROM 
+(SELECT *
+FROM ypr
+NATURAL INNER JOIN quaternion 
+NATURAL INNER JOIN temperature
+NATURAL INNER JOIN solar_voltage) as x
+WHERE CreatedBy = 'root' AND DataName = 'firstdata';
+
+
+
+
+
+
+------------------------------------- 	CREATE USERS 	--------------------------------------------------------------	 
+
+CREATE USER 'sakarpathak'@'%' IDENTIFIED WITH mysql_native_password BY 'Pathak!1@2#3';
+CREATE USER 'shreejansilwal'@'%' IDENTIFIED WITH mysql_native_password BY 'Silwal!1@2#3';
+CREATE USER 'swayamdhakal'@'%' IDENTIFIED WITH mysql_native_password BY 'Dhakal!1@2#3';
+CREATE USER 'pradiptisimkhada'@'%' IDENTIFIED WITH mysql_native_password BY 'Simkhada!1@2#3';
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------- 	GRANT ACCESS TO USERS 	---------------------------------------------------
+
+GRANT SELECT, INSERT ON aosdv.streamer TO 'sakarpathak'@'%','shreejansilwal'@'%','swayamdhakal'@'%','pradiptisimkhada'@'%';
+GRANT SELECT, INSERT ON aosdv.ypr TO 'sakarpathak'@'%','shreejansilwal'@'%','swayamdhakal'@'%','pradiptisimkhada'@'%';
+GRANT SELECT, INSERT ON aosdv.quaternion TO 'sakarpathak'@'%','shreejansilwal'@'%','swayamdhakal'@'%','pradiptisimkhada'@'%';
+GRANT SELECT, INSERT ON aosdv.temperature TO 'sakarpathak'@'%','shreejansilwal'@'%','swayamdhakal'@'%','pradiptisimkhada'@'%';
+GRANT SELECT, INSERT ON aosdv.solar_voltage TO 'sakarpathak'@'%','shreejansilwal'@'%','swayamdhakal'@'%','pradiptisimkhada'@'%';
+
+
+
+
+
+
+
+--------------------------------- 	CREATE TABLE FOR STORING USERNAME AND PASSWORD 	----------------------------------------------
+
+
+CREATE TABLE user(
+	Username varchar(50),
+	Password varchar(64),
+	PRIMARY KEY (Username));
+
+
+--------------------------------- 	STORING PASSWORD 	----------------------------------------------
+
+INSERT INTO user(Username, Password)
+	VALUES ('sakarpathak', SHA2('Pathak!1@2#3', 256));
+
+INSERT INTO user(Username, Password)
+	VALUES ('shreejansilwal', SHA2('Silwal!1@2#3', 256));
+
+INSERT INTO user(Username, Password)
+	VALUES ('swayamdhakal', SHA2('Dhakal!1@2#3', 256));
+
+INSERT INTO user(Username, Password)
+	VALUES ('pradiptisimkhada', SHA2('Simkhada!1@2#3', 256));
+
+
+
+
+
+----------------------------- 	DELETE 	----------------------------------
+
+DELETE ypr, quaternion, temperature, solar_voltage
+FROM ypr
+NATURAL INNER JOIN quaternion 
+NATURAL INNER JOIN temperature
+NATURAL INNER JOIN solar_voltage
+WHERE CreatedBy = 'sakarpathak' AND DataName = 'seconddata';
+
+
+DELETE FROM streamer
+WHERE CreatedBy = 'sakarpathak' AND (DataName = 'firstdata' OR DataName = 'seconddata');
+

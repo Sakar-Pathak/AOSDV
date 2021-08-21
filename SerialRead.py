@@ -28,8 +28,7 @@ def data_management(port_baud, aosdv_type, shared_data_supervisor, shared_data_t
 
         if aosdv_type["reader"] or aosdv_type["streamer"]:
             Client.initialize()
-            if not Client.send_data(aosdv_type[
-                                        "streamer"]):  # if data could not be sent to the server then it means server is not available so quit program
+            if not Client.send_data(aosdv_type["streamer"]):  # if data could not be sent to the server then it means server is not available so quit program
                 quit()
 
         while True:

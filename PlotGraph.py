@@ -176,7 +176,7 @@ class makeGraph:
             f.write(',')
             f.write('Emf2' + '\n')
 
-            for count in self.shared_data_time[0:self.length_x_vals]:
+            for count in range(self.length_x_vals):
                 try:
                     f.write(str(self.shared_data_time[count]))
                     f.write(',')
