@@ -4,9 +4,10 @@ AOSDV is an acronym for Advanced Orientation Simulator and Data Visualizer. As t
 
 The main objective behind development of this tool is to facilitate scientists and engineers to build complex projects by allowing them to precisely simulate orientation of objects in the three dimensional space in the bargain allowing them to visualize different data using graphs. Initial version of this tool [1] could only be run locally on a single device but the pandemic has taught us how difficult it can be for many people to collaborate on a single project without having a proper tool to communicate effectively. This tool was further enhanced to bridge that gap by introducing remote streaming and reading of data using a server. Server maintains a well managed database of data sent by streamer which can be viewed by the reader with permission.
 
-**Fig. 1.1: Communication channel for AOSDV![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.002.jpeg)**
+<img src = "https://user-images.githubusercontent.com/87471420/140638702-8277adbc-8b77-4518-920b-55f5781bbc75.jpeg">
+Fig: Communication channel for AOSDV
 
-The figure above shows the communication channel used in our tool. It is clear from the figure that any device can stream as well as read and process data as long as they have proper permission. A device can be a streamer as well as a reader. The diagram simply signifies the two way nature of communication. This is further explained in page \*\*.
+The figure above shows the communication channel used in our tool. It is clear from the figure that any device can stream as well as read and process data as long as they have proper permission. A device can be a streamer as well as a reader. The diagram simply signifies the two way nature of communication.
 
 After fetching the data from a remote object or server, it can be visualized in two ways namely a lined scatter plot and a 3D representation. Scatter plot can be used to analyze change in physical parameters of the object while 3D representation simulates orientation of the given object in 3D space. The data also can be saved locally or in the server as shown in figure above as required.
 
@@ -18,11 +19,11 @@ This is an overview of AOSDV.  All about the said tool is explained thoroughly i
 
   - ## **`Background`**
 
-    We used prototyping model for developing this particular project. First, we developed a simple orientation simulator in C++ back in 2019. We redesigned it in python and added an important data visualization feature giving birth to the Orientation Simulator and Data Visualizer. We then took it a step further to include databases stored on a remote server fabricating AOSDV as we know today.
+    We used prototyping model for developing this particular project. First, we developed a simple orientation simulator in C++ back in 2019. We redesigned it in python and    added an important data visualization feature giving birth to the Orientation Simulator and Data Visualizer. We then took it a step further to include databases stored on a remote server fabricating AOSDV as we know today.
 
-    ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.003.png)
+    <img src = "https://user-images.githubusercontent.com/87471420/140638713-76db8f8f-d1b7-43e4-9896-299aab7a1118.png">
 
-    **Fig. 3.1: Timeline of Development of Project**
+    Fig: Timeline of Development of Project
 
     The methodologies used for developing this particular project are further discussed henceforth.
 
@@ -31,19 +32,19 @@ This is an overview of AOSDV.  All about the said tool is explained thoroughly i
 
     Let us first look at the basic architecture of AOSDV and understand how we implemented different functionalities as well as how they can be used. The architecture is based on communication between client and server. Serial port communication is added for fetching data from remote objects. Block diagram for this is given below and its components are explained as well.
 
-    ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.004.jpeg)
+    <img src = "https://user-images.githubusercontent.com/87471420/140638714-b3525fa4-377e-4376-9692-dca8a55702d4.jpeg">
 
-    **Figure 3.2:Basic architecture of AOSDV**
+    Fig:Basic architecture of AOSDV
 
     - ### **`Database`**
 
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.005.jpeg)
+      <img src = "https://user-images.githubusercontent.com/87471420/140638715-45033129-0afc-4c58-854d-0d79f757b4c1.jpeg">
 
-      **Fig 3.3: Entity Relationship diagram of Database**
+      Fig: Entity Relationship diagram of Databas
 
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.006.jpeg)
+      <img src = "https://user-images.githubusercontent.com/87471420/140638701-64049d27-a0f8-4675-80dd-d900a688b908.jpeg">
 
-      **Fig 3.4: Relational diagram of Database**
+      Fig: Relational diagram of Database
 
       Our database consists of Six tables. But all of the users have access to only five of them except the “user” table. The “password”  column in the user table consists of SHA256 hashed passwords.
 
@@ -57,7 +58,7 @@ This is an overview of AOSDV.  All about the said tool is explained thoroughly i
 
       recognizes if the user is streamer or reader. Then it receives the data from the streamer and then broadcasts all the received data     to all the reader clients.
 
-      **Fig. 1.1: Communication channel for AOSDV![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.007.jpeg)**
+      Fig: Communication channel for AOSDV
 
       The socket program on the client side handles sending and receiving of the data to or from the single server. The address of the    server and the port for the communication is read from the config.txt[2] file.
 
@@ -69,23 +70,23 @@ This is an overview of AOSDV.  All about the said tool is explained thoroughly i
 
       3D simulation is done with the help of Panda3D. It first shows the user a frame to select their model.
 
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.008.jpeg)
+      <img src = "https://user-images.githubusercontent.com/87471420/140638703-a16db570-473d-4611-b8f4-52121927061e.jpeg">
 
-      **Fig 3.5:Selecting Model**
+      Fig: Selecting Model
 
       After the model is selected it simulates the model in real time as per the yaw, pitch and roll data.
 
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.009.jpeg)
+      <img src = "https://user-images.githubusercontent.com/87471420/140638704-d0377fcd-cfe7-4dc4-9b74-810f48798ae7.jpeg">
 
-      **Fig 3.6: Rocket Model**
+      Fig: Rocket Model
 
     - ### **`Plot Graph`**
 
       Plot Graph is completely designed with matplotlib (version 13.2.1 or 13.2.2). We have made use of different buttons, widgets,     sliders, labels to make users work on the graph more efficiently.
 
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.010.jpeg)
+      <img src = "https://user-images.githubusercontent.com/87471420/140638706-46b9fc4e-8bae-48ad-b50d-92a70c6a3033.jpeg">
 
-      **Fig 3.7: Plot Graph**
+      Fig: Plot Graph
 
     - ### **`Function of different buttons`**
 
@@ -109,10 +110,10 @@ This is an overview of AOSDV.  All about the said tool is explained thoroughly i
         <br />
       
       *If you have cloned the project from the github repository you can open the project by running aosdv\_run.bat file. After that the config.txt[2] file opens for changing the configurations realtime and along with that the user is asked to select one of the five modes as below.*
-
-      ![](Aspose.Words.6b27fe4a-de6c-4803-a7f7-88b0aff7d318.011.png)
-
-      **Fig 3.8: Selection of modes** 
+      
+      <img src = "https://user-images.githubusercontent.com/87471420/140638708-9145aabd-e98c-4964-a7b2-963148a81ef6.png">
+      Fig: Selection of modes 
+      
     - ### **`The five modes of operation of AOSDV works as described below`**:
 
       - #### **`Local`**
@@ -204,3 +205,4 @@ We also plan to use this tool in our future projects requiring data analysis and
 1. <https://pyserial.readthedocs.io/en/latest/>
 1. <https://www.w3schools.com/python/python_mysql_getstarted.asp>
 1. https://dev.mysql.com/doc
+
